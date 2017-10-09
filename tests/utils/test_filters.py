@@ -70,7 +70,6 @@ class TestFilter:
                         'type': 'regex', 'expr': '.*([0-9]+)'}}
         assert actual == expected
 
-
     def test_interval_filter(self):
         actual = filters.Filter.build_filter(
             filters.Interval(dimension='dim', intervals=["2014-10-01T00:00:00.000Z/2014-10-07T00:00:00.000Z"]))
@@ -88,6 +87,21 @@ class TestFilter:
             'type': 'interval', 'dimension': 'dim',
             'intervals': ["2014-10-01T00:00:00.000Z/2014-10-07T00:00:00.000Z"],
             'extractionFn': {'type': 'regex', 'expr': '.*([0-9]+)'}
+        }
+        assert actual == expected
+
+    def test_lookup_with_extraction_function(self):
+        import json
+        f = filters.Filter(
+            dimension='site_id',
+            extraction_function=dimensions.RegisteredLookupExtraction('site_lookup_table'),
+            value="\u4f20\u6f3e"
+        )
+        actual = filters.Filter.build_filter(f)
+        print(json.dumps(actual))
+        expected = {
+            'type': 'selector', 'dimension': 'site_id',"value":"\u4f20\u6f3e",
+            'extractionFn': {'type': 'registeredLookup', 'lookup': 'site_lookup_table'}
         }
         assert actual == expected
 
