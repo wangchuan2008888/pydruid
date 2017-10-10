@@ -213,6 +213,8 @@ class QueryBuilder(object):
         :param string query_type: query type
         :raise ValueError: if input is not string or list of strings
         """
+        # disable union datasource
+        return datasource
         if not (
                     isinstance(datasource, str) or
                     (isinstance(datasource, list) and all([isinstance(x, str) for x in datasource]))
